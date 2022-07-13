@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import os
 import re
 import warnings
 
@@ -48,3 +49,13 @@ class ConvTracker:
 
     def update_mesh(self):
         self.mesh = [val+1 for val in self.mesh]
+
+
+# Execute From Command Line
+if __name__ == '__main__':
+    qe_sim = ConvTracker(args.input, args.ke_cutoff)
+    for i in range(max_iterations):
+        os.system(f'pw.x args.input_file')
+        # check energy from output
+        if qe_sim.check_convergence:
+            break
