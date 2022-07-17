@@ -54,7 +54,5 @@ class ConvTracker:
         else:
             return abs(self.energy[-1] - self.energy[-2]) <= self.cutoff
 
-    def update_mesh(self):
-        self.mesh = [val+1 for val in self.mesh]
 
 
