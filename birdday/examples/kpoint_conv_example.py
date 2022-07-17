@@ -3,7 +3,7 @@ from exabyte_api_client.endpoints.projects import ProjectEndpoints
 from exabyte_api_client.endpoints.materials import MaterialEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
 
-from kpoints.kpoint import ConvTracker
+from kpoint.kpoint import ConvTracker
 
 # Initialize the endpoints
 # Replace 'ACCOUNT_ID' and 'AUTH_TOKEN' with your respective tokens.
