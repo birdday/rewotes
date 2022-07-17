@@ -20,6 +20,18 @@ project_id = project_endpoints.list({"isDefault": True, "owner._id": ACCOUNT_ID}
 material_id = material_endpoints.list({"isDefault": True, "owner._id": ACCOUNT_ID})[0]["_id"]
 workflow_id = workflow_endpoints.list({"name": "KPOINT_WORKFLOW", "owner._id": ACCOUNT_ID})[0]["_id"]
 
+config = = {
+    "owner": {"_id": owner_id},
+    "_material": {"_id": material_id},
+    "workflow": {"_id": workflow_id},
+    "project": {"_id": project_id}}
+    'ppn': '1',
+    'nodes': '1',
+    'queue': 'D',
+    'timeLimit': '01:00:00',
+    'cluster': {'fqdn': 'cluster-001'},
+    }
+
 # Create Tracker Class and Run
-tracker = ConvTracker(owner_id, project_id, material_id, workflow_id, job_endpoints)
-tracker.run(max_iter=20)
+tracker = ConvTracker(config, job_endpoints)
+tracker.run(max_iter=20, job_set_name="KPoint", job_name_prefix="kpoint")
