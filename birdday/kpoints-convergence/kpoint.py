@@ -1,6 +1,4 @@
-import argparse
 import numpy as np
-import os
 import re
 import warnings
 
@@ -17,14 +15,6 @@ class ConvTracker:
 
         self.parse_input()
 
-    def parse_input(self):
-        f = open(self.input_file, 'r')
-        lines = f.readlines()
-        for i, line in enumerate(lines):
-            if re.search('K_POINTS', line):
-                print(lines[i], lines[i+1])
-                break
-        f.close()
 
     def check_convergence(self):
         if len(self.ke_vals) < 2:
