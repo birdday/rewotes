@@ -4,6 +4,26 @@ from utils.generic import wait_for_jobs_to_finish
 
 
 class ConvTracker:
+        """
+    Job endpoints.
+
+    Args:
+        config (dict): Exabyte API config.
+        job_endpoints (JobEndpoints): Exabyte API endpoint.
+        kwargs:
+            cutoff (float): Desired energy cutoff in eV.
+            energy (list): Total energy values. Can be used as a pseudo-restart to convergence.
+
+    Attributes:
+        config (str): Exabyte API config.
+        owner_id (str): Owner ID. Generated from config on init.
+        project_id (str): Project ID. Generated from config on init.
+        workflow_id (str): Workflow ID. Generated from config on init.
+        material_id (str): Material ID. Generated from config on init.
+        job_endpoints (JobEndpoints): Exabyte API endpoint.
+        cutoff (float): Desired energy cutoff in eV.
+        energy (list): List of energy values used to check for convergence.
+    """
 
     def __init__(self, config, job_endpoints, cutoff=1e-5, energy=[]):
         self.config = config
@@ -17,6 +37,16 @@ class ConvTracker:
         self.energy = energy            # Array of energies can be passed in to continue a job set.
 
     def create_submit_job(self, kp, jobs_set=None, job_name_prefix="kpoint"):
+        """
+        Creates and submits a given job.
+
+        Args:
+            kp (int): Value of kpoints. Also used to generate job name.
+
+        kwargs:
+            jobs_set (str): ID of job set.
+            job_name_prefix (str): Name of job prepended to kpoint value.
+        """
         job_name = {"name": f"{job_name_prefix}_{kp}"}
         self.config.update(job_name)
         job = self.job_endpoints.create(self.config)
@@ -33,6 +63,12 @@ class ConvTracker:
         return job["_id"]
 
     def parse_output(self, job_id):
+        """
+        Read energy from results file
+
+        Args:
+            job_id (str): ID of job to get results from.
+        """
         files = self.job_endpoints.list_files(job_id)
         output_file = [file for file in files if file["name"] ==  'pw_scf.out'][0]
         server_response = urllib.request.urlopen(output_file['signedUrl'])
@@ -45,12 +81,24 @@ class ConvTracker:
         return total_energy_ev
 
     def check_convergence(self):
+        """
+        Check if energy convergence reached.
+        """
         if len(self.energy) < 2:
             return False
         else:
             return abs(self.energy[-1] - self.energy[-2]) <= self.cutoff
 
     def run(self, kp_initial=1, max_iter=20, job_set_name=None, job_name_prefix="kpoint"):
+        """
+        Manages job submission and checks for convergence.
+
+        kwargs:
+         kp_initial (int): Sets initial kpoint values.
+         max_iter (int): Number of times to iterate before exiting.
+         job_set_name (str): Name given to set of jobs.
+         job_name_prefix (str):  Name of job prepended to kpoint value.
+        """
         if job_set_name is not None:
             jobs_set = self.job_endpoints.create_set({"name": job_set_name, "projectId": self.project_id, "owner": {"_id": self.owner_id}})
         else:
