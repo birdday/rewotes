@@ -3,6 +3,7 @@ import re
 import warnings
 
 import urllib.request
+from utils.generic import wait_for_jobs_to_finish
 
 
 class ConvTracker:
@@ -54,5 +55,16 @@ class ConvTracker:
         else:
             return abs(self.energy[-1] - self.energy[-2]) <= self.cutoff
 
+    def run(self, kp_initial=1, max_iter=20):
+        JOBS_SET_NAME = "KPoint_Test_Set"
+        jobs_set = self.job_endpoints.create_set({"name": JOBS_SET_NAME, "projectId": self.project_id, "owner": {"_id": self.owner_id}})
 
+        for kp in range(kp_initial, max_iter+kp_initial):
+            print(f"KPoints = {kp}")
+            job_id = self.create_submit_job(kp, jobs_set=jobs_set)
+            wait_for_jobs_to_finish(self.job_endpoints, [job_id], poll_interval=10)
+            total_energy = self.parse_output(job_id)
+            self.energy.extend([total_energy])
 
+            if self.check_convergence():
+                break
