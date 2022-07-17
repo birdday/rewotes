@@ -15,7 +15,6 @@ class ConvTracker:
         self.cutoff = cutoff            # Units = eV
         self.energy = energy            # Array of energies can be passed in to continue a job set.
 
-        self.parse_input()
 
 
     def check_convergence(self):
