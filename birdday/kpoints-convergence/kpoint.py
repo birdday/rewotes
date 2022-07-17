@@ -1,7 +1,4 @@
-import numpy as np
 import re
-import warnings
-
 import urllib.request
 from utils.generic import wait_for_jobs_to_finish
 
