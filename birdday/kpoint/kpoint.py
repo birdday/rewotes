@@ -16,10 +16,6 @@ class ConvTracker:
 
     Attributes:
         config (str): Exabyte API config.
-        owner_id (str): Owner ID. Generated from config on init.
-        project_id (str): Project ID. Generated from config on init.
-        workflow_id (str): Workflow ID. Generated from config on init.
-        material_id (str): Material ID. Generated from config on init.
         job_endpoints (JobEndpoints): Exabyte API endpoint.
         cutoff (float): Desired energy cutoff in eV.
         energy (list): List of energy values used to check for convergence.
@@ -27,11 +23,6 @@ class ConvTracker:
 
     def __init__(self, config, job_endpoints, cutoff=1e-5, energy=[]):
         self.config = config
-        self.owner_id = config["owner"]["_id"]
-        self.project_id = config["project"]["_id"]
-        self.workflow_id = config["workflow"]["_id"]
-        self.material_id = config["_material"]["_id"]
-
         self.job_endpoints = job_endpoints
         self.cutoff = cutoff            # Units = eV
         self.energy = energy            # Array of energies can be passed in to continue a job set.
@@ -100,7 +91,7 @@ class ConvTracker:
          job_name_prefix (str):  Name of job prepended to kpoint value.
         """
         if job_set_name is not None:
-            jobs_set = self.job_endpoints.create_set({"name": job_set_name, "projectId": self.project_id, "owner": {"_id": self.owner_id}})
+            jobs_set = self.job_endpoints.create_set({"name": job_set_name, "projectId": self.config["project"]["_id"], "owner": {"_id": self.config["owner"]["_id"]}})
         else:
             job_set = None
 
