@@ -6,19 +6,20 @@ from utils.generic import wait_for_jobs_to_finish
 class ConvTracker:
 
     def __init__(self, config, job_endpoints, cutoff=1e-5, energy=[]):
-        self.owner_id = config["owner"]
-        self.project_id = config["projectID"]
-        self.workflow_id = config["workflow"]
-        self.material_id = config["_material"]
+        self.config = config
+        self.owner_id = config["owner"]["_id"]
+        self.project_id = config["project"]["_id"]
+        self.workflow_id = config["workflow"]["_id"]
+        self.material_id = config["_material"]["_id"]
 
         self.job_endpoints = job_endpoints
         self.cutoff = cutoff            # Units = eV
         self.energy = energy            # Array of energies can be passed in to continue a job set.
 
     def create_submit_job(self, kp, jobs_set=None, job_name_prefix="kpoint"):
-        job_name = {"name": f"{self.config["name"]}_{kp}"}
-        config.update(job_name)
-        job = self.job_endpoints.create(config)
+        job_name = {"name": f"{job_name_prefix}_{kp}"}
+        self.config.update(job_name)
+        job = self.job_endpoints.create(self.config)
 
         if jobs_set is not None:
             self.job_endpoints.move_to_set(job["_id"], "", jobs_set["_id"])
