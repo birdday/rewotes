@@ -22,15 +22,15 @@ class ConvTracker:
             "workflow": {"_id": self.workflow_id},
             "name": JOB_NAME
         }
-        job = job_endpoints.create(config)
+        job = self.job_endpoints.create(config)
         if jobs_set is not None:
-            job_endpoints.move_to_set(job["_id"], "", jobs_set["_id"])
+            self.job_endpoints.move_to_set(job["_id"], "", jobs_set["_id"])
 
         # Update K-Point Values
         # This is not an ideal way to set kpoints, but the built in convergence tool did npt work as expected, and adjusting the workflow did not update render.
         job["workflow"]["subworkflows"][0]["units"][0]["input"][0]["rendered"] = job["workflow"]["subworkflows"][0]["units"][0]["input"][0]["rendered"].replace("K_POINTS automatic\n10 10 10 0 0 0", f"K_POINTS automatic\n{kp} {kp} {kp} 0 0 0")
-        job_endpoints.update(job["_id"], job)
-        job_endpoints.submit(job['_id'])
+        self.job_endpoints.update(job["_id"], job)
+        self.job_endpoints.submit(job['_id'])
 
         return job["_id"]
 
