@@ -4,20 +4,6 @@ import os
 import re
 import warnings
 
-# Parse arguments from command line.
-# -h, --help is added by default.
-parser = argparse.ArgumentParser()
-parser.add_argument('input', help="Path to Quantum Espresso input file.", type=str)
-parser.add_argument('ke_cutoff', help="Desired kinetic energy cutoff. Default units is eV.", type=float)
-parser.add_argument('-u', '--units', help="Set units for ke_cutoff.", type=str)
-
-args = parser.parse_args()
-if args.units:
-    conversion_factors = {'eV':1, 'meV':1e3, 'Ha':27.2114, 'Ry':13.6057}
-    if args.units not in conversion_factors.keys():
-        raise argparse.ArgumentTypeError('Units must be one of the following: eV, meV, Ha, or Ry.')
-    else:
-        print(f'{args.ke_cutoff} {args.units} <--> {args.ke_cutoff*conversion_factors[args.units]} eV')
 
 
 class ConvTracker:
@@ -51,11 +37,3 @@ class ConvTracker:
         self.mesh = [val+1 for val in self.mesh]
 
 
-# Execute From Command Line
-if __name__ == '__main__':
-    qe_sim = ConvTracker(args.input, args.ke_cutoff)
-    for i in range(max_iterations):
-        os.system(f'pw.x args.input_file')
-        # check energy from output
-        if qe_sim.check_convergence:
-            break
