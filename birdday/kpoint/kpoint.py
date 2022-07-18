@@ -4,7 +4,7 @@ from utils.generic import wait_for_jobs_to_finish
 
 
 class ConvTracker:
-        """
+    """
     Job endpoints.
 
     Args:
@@ -15,7 +15,7 @@ class ConvTracker:
             energy (list): Total energy values. Can be used as a pseudo-restart to convergence.
 
     Attributes:
-        config (str): Exabyte API config.
+        config (dict): Exabyte API config.
         job_endpoints (JobEndpoints): Exabyte API endpoint.
         cutoff (float): Desired energy cutoff in eV.
         energy (list): List of energy values used to check for convergence.
