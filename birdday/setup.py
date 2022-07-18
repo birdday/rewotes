@@ -2,15 +2,15 @@
 
 from distutils.core import setup
 setup(
-    name = 'kpoints-convergence',
+    name = 'kpoint',
     version = '0.1.0',
-    description = 'Automatically determines k-point mesh for desired total energy convergence.',
+    description = 'Automatically determines k-point mesh for desired total energy convergence using Mat3ra workflows.',
     author = 'Brian A Day',
     author_email = '22bday@gmail.com',
     url = 'https://github.com/birdday/rewotes/birdday',
-    packages = ['kpoints-convergence'],
+    packages = ['kpoint'],
     install_requires=[
-        'numpy',
-    ],
-    extras_require={'plotting': ['matplotlib']}
+        'exabyte-api-client',
+        'urllib'
+    ]
 )
