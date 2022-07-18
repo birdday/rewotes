@@ -91,7 +91,7 @@ class ConvTracker:
          job_name_prefix (str):  Name of job prepended to kpoint value.
         """
         if job_set_name is not None:
-            jobs_set = self.job_endpoints.create_set({"name": job_set_name, "projectId": self.config["project"]["_id"], "owner": {"_id": self.config["owner"]["_id"]}})
+            jobs_set = self.job_endpoints.create_set({"name": job_set_name, "projectId": self.config["_project"]["_id"], "owner": {"_id": self.config["owner"]["_id"]}})
         else:
             job_set = None
 
